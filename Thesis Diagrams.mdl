@@ -84,9 +84,98 @@
 	    (object Class "User"
 		quid       	"5DB00D0C02EB"
 		stereotype 	"Actor")
-	    (object Class "NewClass2"
-		quid       	"5DB16C8801B4"
-		stereotype 	"Actor")
+	    (object Class "DQ_Network"
+		quid       	"5DB1A7BB0291"
+		stereotype 	"boundary"
+		operations 	(list Operations
+		    (object Operation "__init__"
+			quid       	"5DB1AA7002A5"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "save"
+			quid       	"5DB1AA7803C2"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "load"
+			quid       	"5DB1AA7D00A6"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "build_CNN"
+			quid       	"5DB1AA910227"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "checkpoint_path"
+			quid       	"5DB1A802026A")
+		    (object ClassAttribute "name"
+			quid       	"5DB1A80E02DF")
+		    (object ClassAttribute "input_dimension"
+			quid       	"5DB1AA260359")
+		    (object ClassAttribute "n_actions"
+			quid       	"5DB1AA43014D")
+		    (object ClassAttribute "learning_rates"
+			quid       	"5DB1AA4F0188")))
+	    (object Class "Agent"
+		quid       	"5DB1A7DD0058"
+		operations 	(list Operations
+		    (object Operation "__init__"
+			quid       	"5DB1AB1A03E5"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "save"
+			quid       	"5DB1AB220172"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "load"
+			quid       	"5DB1AB31013D"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "learn"
+			quid       	"5DB1AB320361"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "save_transition"
+			quid       	"5DB1AB3402D1"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "next_action"
+			quid       	"5DB1AB4E02EC"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0)
+		    (object Operation "store_result"
+			quid       	"5DB1AB55022A"
+			concurrency 	"Sequential"
+			opExportControl 	"Public"
+			uid        	0))
+		class_attributes 	(list class_attribute_list
+		    (object ClassAttribute "alpha"
+			quid       	"5DB1AA990204")
+		    (object ClassAttribute "gamma"
+			quid       	"5DB1AA9D03D9")
+		    (object ClassAttribute "ephsilon"
+			quid       	"5DB1AAC102C3")
+		    (object ClassAttribute "n_actions"
+			quid       	"5DB1AAC403E1")
+		    (object ClassAttribute "memory_size"
+			quid       	"5DB1AACA0012")
+		    (object ClassAttribute "batch_size"
+			quid       	"5DB1AAD603B4")
+		    (object ClassAttribute "input_dimension"
+			quid       	"5DB1AAE6008F")
+		    (object ClassAttribute "q_next_path"
+			quid       	"5DB1AAFB020D")
+		    (object ClassAttribute "q_eval_path"
+			quid       	"5DB1AAFE02AA")))
 	    (object UseCase "Train the Agent"
 		quid       	"5DB008990354"
 		visible_modules 	(list dependency_list
@@ -163,9 +252,9 @@
 		(object State "Load training data"
 		    quid       	"5DB071970028"
 		    type       	"Normal")
-		(object Decision "Environment data exist?"
+		(object Decision "Environment training data exist?"
 		    quid       	"5DB071B3027D")
-		(object State "Begin new training"
+		(object State "Initiate Training"
 		    quid       	"5DB0720901C5"
 		    type       	"Normal")
 		(object State "$UNNAMED$10"
@@ -245,7 +334,7 @@
 		    label      	""
 		    supplier   	"Use Case View::Activity Diagram::Load training data"
 		    supplier_quidu 	"5DB071970028"
-		    client     	"Use Case View::Activity Diagram::Environment data exist?"
+		    client     	"Use Case View::Activity Diagram::Environment training data exist?"
 		    client_quidu 	"5DB071B3027D"
 		    Event      	(object Event "Yes"
 			quid       	"5DB07237038E")
@@ -254,9 +343,9 @@
 		(object State_Transition
 		    quid       	"5DB0723F03B2"
 		    label      	""
-		    supplier   	"Use Case View::Activity Diagram::Begin new training"
+		    supplier   	"Use Case View::Activity Diagram::Initiate Training"
 		    supplier_quidu 	"5DB0720901C5"
-		    client     	"Use Case View::Activity Diagram::Environment data exist?"
+		    client     	"Use Case View::Activity Diagram::Environment training data exist?"
 		    client_quidu 	"5DB071B3027D"
 		    Event      	(object Event "No"
 			quid       	"5DB0723F03B3")
@@ -264,7 +353,7 @@
 			quid       	"5DB0723F03B5"))
 		(object State_Transition
 		    quid       	"5DB0727800F6"
-		    supplier   	"Use Case View::Activity Diagram::Environment data exist?"
+		    supplier   	"Use Case View::Activity Diagram::Environment training data exist?"
 		    supplier_quidu 	"5DB071B3027D"
 		    client     	"Use Case View::Activity Diagram::Pick atari environment"
 		    client_quidu 	"5DB0717302B8"
@@ -282,7 +371,7 @@
 		    quid       	"5DB0736702F8"
 		    supplier   	"$UNNAMED$11"
 		    supplier_quidu 	"5DB073460388"
-		    client     	"Use Case View::Activity Diagram::Begin new training"
+		    client     	"Use Case View::Activity Diagram::Initiate Training"
 		    client_quidu 	"5DB0720901C5"
 		    sendEvent  	(object sendEvent
 			quid       	"5DB0736702FB"))
@@ -290,7 +379,7 @@
 		    quid       	"5DB08182002B"
 		    supplier   	"Use Case View::Activity Diagram::Show training process"
 		    supplier_quidu 	"5DB0817300C1"
-		    client     	"Use Case View::Activity Diagram::Begin new training"
+		    client     	"Use Case View::Activity Diagram::Initiate Training"
 		    client_quidu 	"5DB0720901C5"
 		    sendEvent  	(object sendEvent
 			quid       	"5DB08182002E"))
@@ -506,7 +595,7 @@
 			    autoResize 	TRUE)
 			(object StateView "Normal" "Pick atari environment" @3
 			    Parent_View 	@1
-			    location   	(224, 256)
+			    location   	(224, 255)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -518,7 +607,7 @@
 				default_color 	TRUE)
 			    label      	(object ItemLabel
 				Parent_View 	@3
-				location   	(224, 245)
+				location   	(224, 244)
 				fill_color 	13434879
 				anchor_loc 	1
 				nlines     	2
@@ -572,9 +661,9 @@
 			    width      	336
 			    height     	134
 			    autoResize 	TRUE)
-			(object StateView "Normal" "Begin new training" @7
+			(object StateView "Normal" "Initiate Training" @7
 			    Parent_View 	@5
-			    location   	(800, 1070)
+			    location   	(800, 1072)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -586,22 +675,22 @@
 				default_color 	TRUE)
 			    label      	(object ItemLabel
 				Parent_View 	@7
-				location   	(800, 1059)
+				location   	(800, 1061)
 				fill_color 	13434879
 				anchor_loc 	1
 				nlines     	2
 				max_width  	204
 				justify    	0
-				label      	"Begin new training")
+				label      	"Initiate Training")
 			    icon_style 	"Icon"
 			    line_color 	3342489
 			    fill_color 	13434879
 			    quidu      	"5DB0720901C5"
 			    height     	134
 			    autoResize 	TRUE)
-			(object DecisionView "Environment data exist?" @8
+			(object DecisionView "Environment training data exist?" @8
 			    Parent_View 	@5
-			    location   	(800, 256)
+			    location   	(800, 254)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -613,7 +702,7 @@
 				default_color 	TRUE)
 			    label      	(object SegLabel @9
 				Parent_View 	@8
-				location   	(593, 108)
+				location   	(497, 125)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -624,12 +713,12 @@
 				    color      	0
 				    default_color 	TRUE)
 				anchor     	1
-				nlines     	2
-				max_width  	300
+				nlines     	1
+				max_width  	591
 				justify    	1
-				label      	"Environment data exist?"
-				pctDist    	-2.354733
-				height     	28
+				label      	"Environment training data exist?"
+				pctDist    	-3.272948
+				height     	87
 				orientation 	1)
 			    icon_style 	"Icon"
 			    line_color 	3342489
@@ -643,8 +732,8 @@
 			    client     	@3
 			    supplier   	@8
 			    vertices   	(list Points
-				(380, 256)
-				(725, 256))
+				(380, 254)
+				(725, 254))
 			    line_style 	0
 			    x_offset   	FALSE)
 			(object StateView "Normal" "Show training process" @11
@@ -682,7 +771,7 @@
 			    client     	@7
 			    supplier   	@11
 			    vertices   	(list Points
-				(800, 1137)
+				(800, 1139)
 				(800, 1270))
 			    line_style 	0
 			    x_offset   	FALSE)
@@ -764,7 +853,7 @@
 				default_color 	TRUE)
 			    label      	(object SegLabel @19
 				Parent_View 	@18
-				location   	(859, 397)
+				location   	(859, 395)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -788,7 +877,7 @@
 			    client     	@8
 			    supplier   	@6
 			    vertices   	(list Points
-				(800, 293)
+				(800, 291)
 				(800, 509))
 			    line_style 	0
 			    x_offset   	FALSE)
@@ -804,7 +893,7 @@
 				default_color 	TRUE)
 			    label      	(object SegLabel @21
 				Parent_View 	@20
-				location   	(1015, 218)
+				location   	(1015, 217)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -828,10 +917,10 @@
 			    client     	@8
 			    supplier   	@7
 			    vertices   	(list Points
-				(875, 256)
+				(875, 254)
 				(1072, 253)
 				(1072, 1072)
-				(950, 1071))
+				(950, 1072))
 			    line_style 	0
 			    x_offset   	FALSE)
 			(object TransView "" @22
@@ -842,7 +931,7 @@
 			    supplier   	@3
 			    vertices   	(list Points
 				(224, 94)
-				(224, 189))
+				(224, 188))
 			    line_style 	0
 			    x_offset   	FALSE)))
 		(object ActivityDiagram "Init Training"
@@ -1104,7 +1193,7 @@
 			    x_offset   	FALSE)
 			(object DecisionView "Every n episode" @38
 			    Parent_View 	@23
-			    location   	(400, 1261)
+			    location   	(400, 1259)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -1116,7 +1205,7 @@
 				default_color 	TRUE)
 			    label      	(object SegLabel @39
 				Parent_View 	@38
-				location   	(475, 1198)
+				location   	(475, 1196)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1147,7 +1236,7 @@
 			    supplier   	@38
 			    vertices   	(list Points
 				(400, 1121)
-				(400, 1224))
+				(400, 1222))
 			    line_style 	0
 			    x_offset   	FALSE)
 			(object StateView "Normal" "Save the models" @41
@@ -1204,7 +1293,7 @@
 				default_color 	TRUE)
 			    label      	(object SegLabel @45
 				Parent_View 	@44
-				location   	(464, 1338)
+				location   	(464, 1337)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1228,7 +1317,7 @@
 			    client     	@38
 			    supplier   	@41
 			    vertices   	(list Points
-				(400, 1298)
+				(400, 1296)
 				(400, 1403))
 			    line_style 	0
 			    x_offset   	FALSE)
@@ -1244,7 +1333,7 @@
 				default_color 	TRUE)
 			    label      	(object SegLabel @47
 				Parent_View 	@46
-				location   	(203, 1223)
+				location   	(203, 1221)
 				font       	(object Font
 				    size       	10
 				    face       	"Arial"
@@ -1268,7 +1357,7 @@
 			    client     	@38
 			    supplier   	@30
 			    vertices   	(list Points
-				(325, 1261)
+				(325, 1259)
 				(78, 1260)
 				(78, 1679)
 				(153, 1678))
@@ -1933,7 +2022,113 @@
 			vertices   	(list Points
 			    (1808, 467)
 			    (1808, 597))
-			line_style 	0)))))
+			line_style 	0)))
+	    (object ClassDiagram "Class Diagram"
+		quid       	"5DB17FE30044"
+		title      	"Class Diagram"
+		zoom       	100
+		max_height 	28350
+		max_width  	21600
+		origin_x   	0
+		origin_y   	0
+		items      	(list diagram_item_list
+		    (object ClassView "Class" "Use Case View::DQ_Network" @84
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(592, 528)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@84
+			    location   	(424, 247)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	336
+			    justify    	0
+			    label      	"DQ_Network")
+			icon       	"boundary"
+			icon_style 	"None"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"5DB1A7BB0291"
+			compartment 	(object Compartment
+			    Parent_View 	@84
+			    location   	(424, 308)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	13434879
+			    anchor     	2
+			    nlines     	10
+			    max_width  	334
+			    justify    	1)
+			width      	354
+			height     	586
+			annotation 	8
+			autoResize 	TRUE)
+		    (object ClassView "Class" "Use Case View::Agent" @85
+			ShowCompartmentStereotypes 	TRUE
+			IncludeAttribute 	TRUE
+			IncludeOperation 	TRUE
+			location   	(992, 704)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			label      	(object ItemLabel
+			    Parent_View 	@85
+			    location   	(824, 248)
+			    fill_color 	13434879
+			    nlines     	1
+			    max_width  	336
+			    justify    	0
+			    label      	"Agent")
+			icon_style 	"Icon"
+			line_color 	3342489
+			fill_color 	13434879
+			quidu      	"5DB1A7DD0058"
+			compartment 	(object Compartment
+			    Parent_View 	@85
+			    location   	(824, 309)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    icon_style 	"Icon"
+			    fill_color 	13434879
+			    anchor     	2
+			    nlines     	17
+			    max_width  	353
+			    justify    	1)
+			width      	354
+			height     	936
+			annotation 	8
+			autoResize 	TRUE)))))
     root_category 	(object Class_Category "Logical View"
 	quid       	"39C9260C00D5"
 	exportControl 	"Public"
@@ -1966,7 +2161,7 @@
 		origin_x   	0
 		origin_y   	0
 		items      	(list diagram_item_list
-		    (object CategoryView "Logical View::java" @84
+		    (object CategoryView "Logical View::java" @86
 			location   	(208, 272)
 			font       	(object Font
 			    size       	10
@@ -1978,7 +2173,7 @@
 			    color      	0
 			    default_color 	TRUE)
 			label      	(object ItemLabel
-			    Parent_View 	@84
+			    Parent_View 	@86
 			    location   	(64, 188)
 			    nlines     	2
 			    max_width  	288
@@ -1990,7 +2185,7 @@
 			quidu      	"39C92661003B"
 			width      	300
 			height     	180)
-		    (object CategoryView "Logical View::javax" @85
+		    (object CategoryView "Logical View::javax" @87
 			location   	(656, 272)
 			font       	(object Font
 			    size       	10
@@ -2002,7 +2197,7 @@
 			    color      	0
 			    default_color 	TRUE)
 			label      	(object ItemLabel
-			    Parent_View 	@85
+			    Parent_View 	@87
 			    location   	(512, 188)
 			    nlines     	2
 			    max_width  	288
@@ -2014,7 +2209,7 @@
 			quidu      	"39C926610018"
 			width      	300
 			height     	180)
-		    (object CategoryView "Logical View::org" @86
+		    (object CategoryView "Logical View::org" @88
 			location   	(1104, 272)
 			font       	(object Font
 			    size       	10
@@ -2026,7 +2221,7 @@
 			    color      	0
 			    default_color 	TRUE)
 			label      	(object ItemLabel
-			    Parent_View 	@86
+			    Parent_View 	@88
 			    location   	(960, 188)
 			    nlines     	2
 			    max_width  	288
@@ -2047,7 +2242,7 @@
 		origin_x   	0
 		origin_y   	0
 		items      	(list diagram_item_list
-		    (object NoteView @87
+		    (object NoteView @89
 			location   	(224, 624)
 			font       	(object Font
 			    size       	10
@@ -2062,7 +2257,7 @@
 			fill_color 	12632256
 			width      	300
 			height     	132)
-		    (object NoteView @88
+		    (object NoteView @90
 			location   	(704, 624)
 			font       	(object Font
 			    size       	10
@@ -2077,7 +2272,7 @@
 			fill_color 	8421631
 			width      	300
 			height     	132)
-		    (object NoteView @89
+		    (object NoteView @91
 			location   	(1200, 624)
 			font       	(object Font
 			    size       	10
@@ -2092,7 +2287,7 @@
 			fill_color 	12615680
 			width      	300
 			height     	132)
-		    (object NoteView @90
+		    (object NoteView @92
 			location   	(1664, 624)
 			font       	(object Font
 			    size       	10
@@ -2107,7 +2302,7 @@
 			fill_color 	16777215
 			width      	300
 			height     	132)
-		    (object Label @91
+		    (object Label @93
 			location   	(81, 369)
 			font       	(object Font
 			    size       	12
@@ -2122,7 +2317,7 @@
 			max_width  	1163
 			justify    	1
 			label      	"J2EE: Java 2 Platform, Enterprise Edition - v 1.2.1")
-		    (object Label @92
+		    (object Label @94
 			location   	(96, 608)
 			font       	(object Font
 			    size       	10
@@ -2137,7 +2332,7 @@
 			max_width  	268
 			justify    	1
 			label      	"Abstract Class")
-		    (object Label @93
+		    (object Label @95
 			location   	(592, 608)
 			font       	(object Font
 			    size       	10
@@ -2152,7 +2347,7 @@
 			max_width  	225
 			justify    	1
 			label      	"Final Class")
-		    (object Label @94
+		    (object Label @96
 			location   	(1104, 608)
 			font       	(object Font
 			    size       	10
@@ -2167,7 +2362,7 @@
 			max_width  	206
 			justify    	1
 			label      	"Interface")
-		    (object Label @95
+		    (object Label @97
 			location   	(1552, 608)
 			font       	(object Font
 			    size       	10
