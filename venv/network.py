@@ -71,3 +71,51 @@ class DeepQNetwork(object):
             self.loss = tf.reduce_mean(tf.square(self.q_values, self.q_target))
 
             self.train = tf.train.RMSPropOptimizer(self.learning_rate).minimize(self.loss)
+
+        def save(self):
+            print("Saving Session........")
+            self.saver.save(self.sess, self.checkpoint_file)
+
+        def load(self):
+            print("Restoring Session........")
+            self.saver.restore(self.sess, self.checkpoint_file)
+
+class Agent(object):
+    def __init__(self, learning_rate, discount_factor, total_action, epsilon, batch_size,
+                 memory_size, replace_target=1000, input_dims=(210,160,4),
+                 q_next_dir='tmp/q_next', q_eval_dir='tmp/q_eval'):
+        self.learning_rate = learning_rate
+        self.discount_factor = discount_factor
+        self.total_actions = total_actions
+        self.epsilon = epsilon
+        self.batch_size = batch_size
+        self.memory_size = memory_size
+        self.memory_counter = 0
+        self.replace_target = replace_target
+        self.input_dims = input_dims
+        self.q_next = DeepQNetwork(learning_rate=learning_rate, total_action=total_action, input_dimension=input_dims, )q_next_dir
+        self.q_eval = q_eval_dir
+
+        self.action_space = [i for i in range (self.total_actions)]
+        self.state_memory = np.zeros(self.memory_size, *input_dims)
+        self.next_state_memory = np.zeros(self.memory_size, self.total_actions)
+        self.action_memory = np.zeros((self.memory_size, self.total_actions), dtype=int8)
+        self.reward_memory = np.zeros(self.memory_size)
+        self.terminal_memory = np.zeros(self.memory_size, dtype=int8)
+
+    def store_transition(self, state, action, reward, next_state, terminal_state):
+        index = self.memory_counter % self.memory_size
+        action = np.zeros(self.total_actions)
+        actions[action] = 1.0
+        self.state_memory = state
+        self.next_state_memory = next_state
+        self.action_memory = action
+        self.reward_memory = reward
+        self.terminal_memory = terminal_state
+
+    def choose_action(self, state):
+        random = np.random.random()
+        if random < self.epsilon:
+            action = np.random.choice(self.action_space)
+        else:
+            actions = self.q_eval
