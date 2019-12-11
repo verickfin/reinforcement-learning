@@ -72,13 +72,14 @@ class DeepQNetwork(object):
 
             self.train = tf.train.RMSPropOptimizer(self.learning_rate).minimize(self.loss)
 
-        def save(self):
-            print("Saving Session........")
-            self.saver.save(self.sess, self.checkpoint_file)
+    def save(self):
+        print("Saving Session........")
+        self.saver.save(self.sess, self.checkpoint_file)
 
-        def load(self):
-            print("Restoring Session........")
-            self.saver.restore(self.sess, self.checkpoint_file)
+    def load(self):
+        print("Restoring Session........")
+        self.saver.restore(self.sess, self.checkpoint_file)
+
 
 class Agent(object):
     def __init__(self, learning_rate, discount_factor, total_action, epsilon, batch_size,
@@ -93,15 +94,17 @@ class Agent(object):
         self.memory_counter = 0
         self.replace_target = replace_target
         self.input_dims = input_dims
-        self.q_next = DeepQNetwork(learning_rate=learning_rate, total_action=total_action, input_dimension=input_dims, )q_next_dir
-        self.q_eval = q_eval_dir
+        self.q_next = DeepQNetwork('q_next', total_action, learning_rate,
+                                   input_dimension=input_dims, checkpoint_dir=q_next_dir)
+        self.q_eval = DeepQNetwork('q_eval', total_action, learning_rate,
+                                   input_dimension=input_dims, checkpoint_dir=q_eval_dir)
 
         self.action_space = [i for i in range (self.total_actions)]
-        self.state_memory = np.zeros(self.memory_size, *input_dims)
-        self.next_state_memory = np.zeros(self.memory_size, self.total_actions)
         self.action_memory = np.zeros((self.memory_size, self.total_actions), dtype=int8)
         self.reward_memory = np.zeros(self.memory_size)
-        self.terminal_memory = np.zeros(self.memory_size, dtype=int8)
+        self.state_memory = np.zeros(self.memory_size, *input_dims)
+        self.next_state_memory = np.zeros(self.memory_size, self.total_actions)
+        self.terminal_state_memory = np.zeros(self.memory_size, dtype=int8)
 
     def store_transition(self, state, action, reward, next_state, terminal_state):
         index = self.memory_counter % self.memory_size
@@ -118,4 +121,56 @@ class Agent(object):
         if random < self.epsilon:
             action = np.random.choice(self.action_space)
         else:
-            actions = self.q_eval
+            actions = self.q_eval.sess.run(self.q_eval.q_values, feed_dict={self.q_eval.input: state})
+            action = np.argmax(actions)
+        return action
+
+    def learn(self):
+        if self.memory_counter % self.replace_target == 0:
+            self.update_graph()
+
+        max_memory = self.memory_counter if self.memory_counter < self.memory_size else self.memory_size
+
+        batch = np.random.choice(max_memory, self.batch_size)
+
+        state_batch = self.state_memory[batch]
+        action_batch = self.action_memory[batch]
+        action_values = np.array([0, 1, 2], dtype=np.int8)
+        action_indices = np.dot(action_batch, action_values)
+        reward_batch = self.reward_memory[batch]
+        terminal_state_batch = self.terminal_state_memory[batch]
+        next_state_batch = self.next_state_memory[batch]
+
+        q_eval = self.q_eval.sess.run(self.q_eval.q_values, feed_dict={self.q_eval.input: state_batch})
+        q_next = self.q_next.sess.run(self.q_next.q_values, feed_dict={self.q_next.input: next_state_batch})
+
+        q_target = q_eval.copy()
+        index = np.arange(self.batch_size)
+        q_target[index, action_indices] = reward_batch + self.discount_factor *\
+                                          np.max(q_next, axis=1) * terminal_state_batch
+
+        network = self.q_eval.sess.run(self.q_eval.train,
+                                       feed_dict={self.q_eval.input: state_batch,
+                                                  self.q_eval.action_space: next_state_batch,
+                                                  self.q_eval.q_target: q_target})
+
+        if self.memory_counter > 10000:
+            if self.epsilon > 0.05:
+                self.epsilon -= 4e-7
+            elif self.epsilon <= 0.05:
+                self.epsilon = 0.05
+
+    def save(self):
+        self.q_eval.save()
+        self.q_next.save()
+
+    def load(self):
+        self.q_eval.load()
+        self.q_next.load()
+
+    def update_graph(self):
+        t_params = self.q_next.params
+        e_params = self.q_eval.params
+
+        for t, e in zip(t_params, e_params):
+            self.q_eval.sess.run(tf.assign(t, e))
