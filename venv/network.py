@@ -102,8 +102,8 @@ class Agent(object):
         self.action_space = [i for i in range (self.total_actions)]
         self.action_memory = np.zeros((self.memory_size, self.total_actions), dtype=int8)
         self.reward_memory = np.zeros(self.memory_size)
-        self.state_memory = np.zeros(self.memory_size, *input_dims)
-        self.next_state_memory = np.zeros(self.memory_size, self.total_actions)
+        self.state_memory = np.zeros((self.memory_size, *input_dims))
+        self.next_state_memory = np.zeros((self.memory_size, self.total_actions))
         self.terminal_state_memory = np.zeros(self.memory_size, dtype=int8)
 
     def store_transition(self, state, action, reward, next_state, terminal_state):
