@@ -32,7 +32,7 @@ def stack_frames(stacked_frames, frame, buffer_size):
     return stacked_frames
 
 
-def plotLearning(x, scores, epsilons, filename, lines=None):
+def plot(x, scores, epsilons, filename, lines=None):
     fig = plt.figure()
     ax = fig.add_subplot(111, label="1")
     ax2 = fig.add_subplot(111, label="2", frame_on=False)
@@ -123,4 +123,4 @@ if __name__ == '__main__':
             score_array.append(score)
             epsilon_array.append(agent.epsilon)
             x = [i + 1 for i in range(numGames)]
-            plotLearning(x, scores, eps_history, filename)
+            plot(x, scores, eps_history, filename)
