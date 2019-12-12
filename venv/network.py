@@ -87,7 +87,7 @@ class Agent(object):
                  q_next_dir='tmp/q_next', q_eval_dir='tmp/q_eval'):
         self.learning_rate = learning_rate
         self.discount_factor = discount_factor
-        self.total_actions = total_actions
+        self.total_action = total_action
         self.epsilon = epsilon
         self.batch_size = batch_size
         self.memory_size = memory_size

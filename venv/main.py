@@ -9,7 +9,7 @@ ALPHA = 0.05
 EPSILON = 0.5
 GAMMA = 0.99
 INPUT_DIMS = (180, 160, 4)
-TOTAL_ACTIONS = 3
+TOTAL_ACTION = 3
 MEMORY_SIZE = 50000
 BATCH_SIZE = 64
 
@@ -68,7 +68,7 @@ def plot(x, scores, epsilons, filename, lines=None):
 if __name__ == '__main__':
     env = gym.make('Breakout-v0')
     agent = Agent(learning_rate=ALPHA, discount_factor=GAMMA,
-                  total_action=TOTAL_ACTIONS, epsilon=EPSILON,
+                  total_action=TOTAL_ACTION, epsilon=EPSILON,
                   batch_size=BATCH_SIZE, memory_size=MEMORY_SIZE, input_dims=INPUT_DIMS)
     load = False
     if load:
