@@ -67,8 +67,7 @@ def plot(x, scores, epsilons, filename, lines=None):
 
 if __name__ == '__main__':
     env = gym.make('Breakout-v0')
-    agent = Agent(learning_rate=ALPHA, discount_factor=GAMMA,
-                  total_action=TOTAL_ACTION, epsilon=EPSILON,
+    agent = Agent(learning_rate=ALPHA, discount_factor=GAMMA, epsilon=EPSILON, total_action=TOTAL_ACTION,
                   batch_size=BATCH_SIZE, memory_size=MEMORY_SIZE, input_dims=INPUT_DIMS)
     load = False
     if load:
