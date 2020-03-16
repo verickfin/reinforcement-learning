@@ -165,7 +165,7 @@ class DeepQNetwork(object):
         train_result = self.model.fit(s_train, q_train,
                        batch_size=self.batch_size, epochs=1,
                        verbose=0, callbacks=self.callbacks_list)
-        to_csv("history.csv", [train_result.history['loss'][0], train_result.history['acc'][0]])
+        # to_csv("history.csv", [train_result.history['loss'][0], train_result.history['acc'][0]])
 
         return train_result
 
