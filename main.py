@@ -35,8 +35,29 @@ import matplotlib.pyplot as plt
 #
 
 from keras.callbacks import *
-from time import time
 # !ls /content/drive/'My Drive'/'Colab Notebooks'/
+
+
+from PIL import Image
+# from pyvirtualdisplay import Display
+# from IPython import display as ipythondisplay
+# from IPython.display import clear_output
+from gym.wrappers import Monitor
+
+# display = Display(visible=0, size=(1400, 900))
+# display.start()
+#
+# IMG_SIZE = None
+#
+# def show_video():
+#     html = []
+#     for mp4 in Path("videos").glob("*.mp4"):
+#         video_b64 = base64.b64encode(mp4.read_bytes())
+#         html.append('''<video alt="{}" autoplay
+#                       loop controls style="height: 400px;">
+#                       <source src="data:video/mp4;base64,{}" type="video/mp4" />
+#                  </video>'''.format(mp4, video_b64.decode('ascii')))
+#     ipythondisplay.display(ipythondisplay.HTML(data="<br>".join(html)))
 
 
 def to_csv(filename, row):
@@ -229,28 +250,6 @@ class Agent(object):
         return self.networks.train(batch, self.networks.target_model)
 
 
-from PIL import Image
-# from pyvirtualdisplay import Display
-# from IPython import display as ipythondisplay
-# from IPython.display import clear_output
-from gym.wrappers import Monitor
-
-# display = Display(visible=0, size=(1400, 900))
-# display.start()
-#
-# IMG_SIZE = None
-#
-# def show_video():
-#     html = []
-#     for mp4 in Path("videos").glob("*.mp4"):
-#         video_b64 = base64.b64encode(mp4.read_bytes())
-#         html.append('''<video alt="{}" autoplay
-#                       loop controls style="height: 400px;">
-#                       <source src="data:video/mp4;base64,{}" type="video/mp4" />
-#                  </video>'''.format(mp4, video_b64.decode('ascii')))
-#     ipythondisplay.display(ipythondisplay.HTML(data="<br>".join(html)))
-
-
 def preprocess(observation):
     global IMG_SIZE
     # start:stop:slice, ::step back 2 step a time
@@ -374,8 +373,7 @@ def plot(x, y, z=None, mode=None, filename=None):
         plt.savefig(filename)
     plt.show()
 
-
-# from IPython.display import clear_output
+# Hyperparameters
 ALPHA = 0.0025
 EPSILON = 0.95
 EPSILON_DECAY = 0.005
@@ -436,6 +434,11 @@ while episode_counter < MAX_EPISODE:
         action = agent.choose_action(np.asarray([stacked_frames]))
         observation, reward, done, info = env.step(action)
         observation = preprocess(observation)
+
+        # im = Image.fromarray(np.uint8(observation))
+        # if frame_counter < 1000:
+        #     file_name = 'preprocess_' + str(frame_counter) + '.png'
+        #     im.save(file_name)
 
         next_state = shift(stacked_frames, observation)
         live = info['ale.lives']
